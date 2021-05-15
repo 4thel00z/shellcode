@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "shellcode"
+version = "0.1.0"
+description = "CLI to turn shellcode back to asm."
+authors = ["4thel00z <4thel00z@gmail.com>"]
+license = "GPL-3"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+typer = "^0.3.2"
+capstone = "^4.0.2"
+
+[tool.poetry.dev-dependencies]
+black = "^21.5b1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
