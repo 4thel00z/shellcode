@@ -10,7 +10,7 @@ This tools does exactly that.
 
 ## Usage
 ```
-echo "<some shellcode>" | python3 -m shellcode 
+echo "<some shellcode>"| base64 | python3 -m shellcode 
 ```
 
 ## License
