@@ -8,6 +8,10 @@ it for sanity.
 This tools does exactly that.
 
 ## Usage
+```
+echo "<some shellcode>" | python3 -m shellcode 
+```
 
-```
-```
+## License
+
+This project is licensed under the GPL-3 license.
