@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "shellcode"
-version = "0.1.4"
+version = "0.2.0"
 description = "CLI to turn shellcode back to asm."
 authors = ["4thel00z <4thel00z@gmail.com>"]
 license = "GPL-3"

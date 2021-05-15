@@ -27,11 +27,6 @@ SHELLCODE_TESTS = {
 
 }
 
-
-def test_version():
-    assert __version__ == '0.1.4'
-
-
 def stringify(instruction):
     return "0x%x:\t%s\t%s" % (instruction.address, instruction.mnemonic, instruction.op_str)
 
