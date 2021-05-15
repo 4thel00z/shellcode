@@ -4,6 +4,7 @@ import sys
 
 import typer
 from capstone import *
+from base64 import b64decode as d64
 
 app = typer.Typer()
 ARCHS = {k: v for k, v in locals().items() if k.startswith("CS_ARCH")}
@@ -82,8 +83,10 @@ def to_asm(
     dis = Cs(arch_type, mode_type)
 
     # TODO: deal with bad shellcode characters here
-    shellcode = sys.stdin.read().encode("ascii")
-    
+    shellcode = d64(sys.stdin.buffer.read())
+    if verbose:
+        typer.secho(f"Read shellcode: {shellcode}", fg='yellow')
+
     for instruction in dis.disasm(shellcode, 0x00):
         log(instruction.address, instruction.mnemonic, instruction.op_str)
 
