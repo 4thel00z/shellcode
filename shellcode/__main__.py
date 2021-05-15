@@ -1,45 +1,11 @@
 #! /usr/bin/env python3
 import os
 import sys
-
-import typer
-from capstone import *
 from base64 import b64decode as d64
 
+from shellcode import *
+
 app = typer.Typer()
-ARCHS = {k: v for k, v in locals().items() if k.startswith("CS_ARCH")}
-MODES = {k: v for k, v in locals().items() if k.startswith("CS_MODE")}
-ARCHS_TEXT = "\n\n\t- ".join(["", *ARCHS.keys()])
-MODES_TEXT = "\n\n\t- ".join(["", *MODES.keys()])
-
-
-def secho(address: int, mnemonic: int, op_str: int) -> None:
-    """
-    Print an disassembled instruction with colors.
-    TODO: colors look probably shitty and need to be tweaked
-
-    :param address:
-    :param mnemonic:
-    :param op_str:
-    :return:
-    """
-    typer.echo("\t".join((
-        typer.style('0x%x:' % address, fg='blue'),
-        typer.style('%s' % mnemonic, fg='green'),
-        typer.style('%s' % op_str, fg='yellow'),
-    )))
-
-
-def echo(address: int, mnemonic: int, op_str: int) -> None:
-    """
-    Print an disassembled instruction without colors.
-
-    :param address:
-    :param mnemonic:
-    :param op_str:
-    :return:
-    """
-    typer.echo("0x%x:\t%s\t%s" % (address, mnemonic, op_str))
 
 
 @app.callback(
@@ -56,6 +22,8 @@ def to_asm(
         mode: str = "CS_MODE_32",
         color: bool = True,
         verbose: bool = False,
+        b64: bool = False,
+        start: int = 0x00
 
 ):
     log = echo if not color else secho
@@ -80,14 +48,15 @@ def to_asm(
         typer.secho(f"{MODES_TEXT}", fg='red')
         sys.exit(os.EX_SOFTWARE)
 
-    dis = Cs(arch_type, mode_type)
+    decoder = (lambda a: a) if not b64 else d64
 
     # TODO: deal with bad shellcode characters here
-    shellcode = d64(sys.stdin.buffer.read())
+    shellcode = decoder(sys.stdin.buffer.read())
+
     if verbose:
         typer.secho(f"Read shellcode: {shellcode}", fg='yellow')
 
-    for instruction in dis.disasm(shellcode, 0x00):
+    for instruction in disassemble(shellcode, arch_type, mode_type, start):
         log(instruction.address, instruction.mnemonic, instruction.op_str)
 
 
